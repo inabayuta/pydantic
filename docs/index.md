@@ -10,7 +10,7 @@
 <!--
 Data validation and settings management using python type annotations.
 -->
-python 型アノテーションを使用したデータバリデーションと設定管理。
+Python 型アノテーションを使用したデータバリデーションと設定管理。
 
 <!--
 *pydantic* enforces type hints at runtime, and provides user friendly errors when data is invalid.
