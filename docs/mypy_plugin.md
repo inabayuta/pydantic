@@ -240,41 +240,37 @@ The plugin offers a few optional strictness flags if you want even stronger chec
 さらに強力なチェックが必要な場合、プラグインはいくつかのオプションの厳密なフラグを提供します。
 
 * `init_forbid_extra`
-
 <!--
     If enabled, disallow extra arguments to the `__init__` call even when `Config.extra` is not `"forbid"`.
 -->
-    有効にすると、`Config.extra` が ` "forbid" ` でない場合でも `__init__` 呼び出しへの追加の引数を許可しません。
+有効にすると、`Config.extra` が ` "forbid" ` でない場合でも `__init__` 呼び出しへの追加の引数を許可しません。
 
 * `init_typed`
-
 <!--
     If enabled, include the field types as type hints in the generated signature for the `__init__` method.
 -->
-    有効にすると、`__init__` メソッド用に生成されたシグネチャに型ヒントとしてフィールドの型を含めます。
+有効にすると、`__init__` メソッド用に生成されたシグネチャに型ヒントとしてフィールドの型を含めます。
 
 <!--
     This means that you'll get mypy errors if you pass an argument that is not already the right type to
     `__init__`, even if parsing could safely convert the type.
 -->
-    これは、たとえ安全に型をパースできたとしても正しい型でない引数を `__init__` に渡すと mypy のエラーが発生することを意味します。
+これは、たとえ安全に型をパースできたとしても正しい型でない引数を `__init__` に渡すと mypy のエラーが発生することを意味します。
 
 * `warn_required_dynamic_aliases`
-
 <!--
     If enabled, raise a mypy error whenever a model is created for which
     calls to its `__init__` or `construct` methods require the use of aliases that cannot be statically determined.
     This is the case, for example, if `allow_population_by_field_name=False` and the model uses an alias generator.
 -->
-    有効にすると、モデルが作成されたときに `__init__` または `construct` メソッドの呼び出しで静的に決定できないエイリアスの使用を必要とする場合に、mypy エラーが発生します。
-    これは例えば、`allow_population_by_field_name=False` で、モデルがエイリアスジェネレーターを使用している場合に起こります。
+有効にすると、モデルが作成されたときに `__init__` または `construct` メソッドの呼び出しで静的に決定できないエイリアスの使用を必要とする場合に、mypy エラーが発生します。
+これは例えば、`allow_population_by_field_name=False` で、モデルがエイリアスジェネレーターを使用している場合に起こります。
 
 * `warn_untyped_fields`
-
 <!--
     If enabled, raise a mypy error whenever a field is declared on a model without explicitly specifying its type.
 -->
-    有効にすると、モデル上で型を明示的に指定せずにフィールドを宣言する場合に mypy エラーが発生します。
+有効にすると、モデル上で型を明示的に指定せずにフィールドを宣言する場合に mypy エラーが発生します。
 
 <!--
 #### Configuring the Plugin
