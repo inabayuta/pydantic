@@ -55,12 +55,16 @@ What's going on here:
 <!--
 * `signup_ts` is a datetime field which is not required (and takes the value ``None`` if it's not supplied).
   *pydantic* will process either a unix timestamp int (e.g. `1496498400`) or a string representing the date & time.
+<<<<<<< HEAD
 -->
 * `signup_ts` は datetime フィールドです (指定されていない場合は `None` 値を取ります)。
   *pydantic* は Unix タイムスタンプ (例: `1496498400`) または日付と時刻を表す文字列のいずれかを処理します。
 
 <!--
 * `friends` uses python's typing system, and requires a list of inputs. As with `id`, integer-like objects
+=======
+* `friends` uses python's typing system, and requires a list of integers. As with `id`, integer-like objects
+>>>>>>> 8ccc5708f120f65582cf9238592c6004efffc32d
   will be converted to integers.
 -->
 * `friends` は Python の typing を使用しており、入力のリストが必要です。`id` のように、
