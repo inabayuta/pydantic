@@ -2,7 +2,7 @@
 After 2.5 years of development with contributions from over 80 people and 62 releases, *pydantic* has reached
 version 1!
 -->
-2.5年の開発期間、80人以上の人々の貢献、62のリリースを経て、*pydantic* はバージョン1に到達しました!
+2.5 年の開発期間、80 人以上の人々の貢献、62 のリリースを経て、*pydantic* はバージョン1に到達しました!
 
 <!--
 While the fundamentals of *pydantic* have remained unchanged since the previous release 
@@ -120,14 +120,14 @@ There are a number of changes to how [`BaseSettings`](usage/settings.md) works:
 * the default for `env_prefix` has changed to an empty string, i.e. by default there's no prefix for environment
   variable lookups
 -->
-`env_prefix` のデフォルトがからの文字列に変更されました。つまり、デフォルトでは環境変数のルックアップのプレフィックスはありません。
+* `env_prefix` のデフォルトがからの文字列に変更されました。つまり、デフォルトでは環境変数のルックアップのプレフィックスはありません。
 
 <!--
 * aliases are no longer used when looking up environment variables, instead there's a new `env` setting for `Field()` or 
   in `Config.fields`.
 -->
-環境変数を検索する際にエイリアスは使用されなくなりました。
-代わりに `Field()` または `Config.fields` に新しい `env` 設定があります。
+* 環境変数を検索する際にエイリアスは使用されなくなりました。
+  代わりに `Field()` または `Config.fields` に新しい `env` 設定があります。
 
 <!--
 ### Improvements to field ordering
