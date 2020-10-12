@@ -151,16 +151,12 @@ There are other benefits too! See below for more details.
 -->
 * `@pydantic.dataclasess.dataclass` デコレータは `Config` サブクラスと同じ意味を持つ `config` キーワード引数を受け入れます。
 
-<<<<<<< HEAD
 <!--
-### Optional Capabilites:
+### Optional Capabilities:
 -->
 ### オプション機能
 
 <!--
-=======
-### Optional Capabilities:
->>>>>>> 8ccc5708f120f65582cf9238592c6004efffc32d
 #### Prevent the use of required dynamic aliases
 -->
 #### 必須の動的エイリアスの使用を防止
