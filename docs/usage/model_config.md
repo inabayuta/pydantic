@@ -107,7 +107,8 @@ Options:
 : a `dict` used to override the default error message templates.
   Pass in a dictionary with keys matching the error messages you want to override (default: `{}`)
 -->
-**`error_msg_templates`**: デフォルトのエラーメッセージテンプレートを上書きするために使用される `dict`。
+**`error_msg_templates`**:
+デフォルトのエラーメッセージテンプレートを上書きするために使用される `dict`。
 上書きするエラーメッセージに一致するキーを使用して辞書を渡します(デフォルト: {})
 
 <!--
