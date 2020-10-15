@@ -212,6 +212,9 @@ It has the following arguments:
         相互運用性のため必要な動作に応じて、正規表現を `^` で明示的に固定する(例: `^foo` は `foo` で始まる任意の文字列に一致します)か、
         `.*?` で任意のプレフィックスを明示的に許可します(例: `.*?foo` は、部分文字列 `foo` を含む任意の文字列と一致します)。
 
+        *pydantic* **v2** での動作の変更の可能性については、
+        [#1631](https://github.com/samuelcolvin/pydantic/issues/1631) を参照してください。
+
 <!--
 * `**` any other keyword arguments (e.g. `examples`) will be added verbatim to the field's schema
 -->
