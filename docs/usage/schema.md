@@ -205,15 +205,15 @@ It has the following arguments:
         See [#1631](https://github.com/samuelcolvin/pydantic/issues/1631)
         for a discussion of possible changes to *pydantic* behavior in **v2**.
 -->
-    !!! note
-        *pydantic* は、正規表現を最初に暗黙的に固定されたものとして扱う `re.match` を使用して文字列を検証します。
-        逆に JSON スキーマバリデーターは、`re.search` が行うように、`pattern` キーワードを暗黙的にアンカーされていないものとして扱います。
+!!! note
+    *pydantic* は、正規表現を最初に暗黙的に固定されたものとして扱う `re.match` を使用して文字列を検証します。
+    逆に JSON スキーマバリデーターは、`re.search` が行うように、`pattern` キーワードを暗黙的にアンカーされていないものとして扱います。
 
-        相互運用性のため必要な動作に応じて、正規表現を `^` で明示的に固定する(例: `^foo` は `foo` で始まる任意の文字列に一致します)か、
-        `.*?` で任意のプレフィックスを明示的に許可します(例: `.*?foo` は、部分文字列 `foo` を含む任意の文字列と一致します)。
+    相互運用性のため必要な動作に応じて、正規表現を `^` で明示的に固定する(例: `^foo` は `foo` で始まる任意の文字列に一致します)か、
+    `.*?` で任意のプレフィックスを明示的に許可します(例: `.*?foo` は、部分文字列 `foo` を含む任意の文字列と一致します)。
 
-        *pydantic* **v2** での動作の変更の可能性については、
-        [#1631](https://github.com/samuelcolvin/pydantic/issues/1631) を参照してください。
+    *pydantic* **v2** での動作の変更の可能性については、
+    [#1631](https://github.com/samuelcolvin/pydantic/issues/1631) を参照してください。
 
 <!--
 * `**` any other keyword arguments (e.g. `examples`) will be added verbatim to the field's schema
@@ -227,102 +227,209 @@ to set all of the arguments above except `default`.
 `Field` を使用する代わりに [Config クラス](model_config.md)の `fields` プロパティを使用して、
 `default` を除く上記のすべての引数を設定できます。
 
+<!--
 ### Unenforced Field constraints
+-->
+### 強制されていないフィールドの制約
 
+<!--
 If *pydantic* finds constraints which are not being enforced, an error will be raised. If you want to force the
 constraint to appear in the schema, even though it's not being checked upon parsing, you can use variadic arguments
 to `Field()` with the raw schema attribute name:
+-->
+*pydantic* が強制されていない制約を見つけた場合、エラーが発生します。
+解析時に制約がチェックされていない場合でも制約をスキーマに強制的に表示したい場合は、
+生のスキーマ属性名を使用して `Field()` への可変引数を使用できます:
 
 ```py
 {!.tmp_examples/schema_unenforced_constraints.py!}
 ```
+
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
+<!--
 ## Modifying schema in custom fields
+-->
+## カスタムフィールドのスキーマの変更
 
+<!--
 Custom field types can customise the schema generated for them using the `__modify_schema__` class method;
 see [Custom Data Types](types.md#custom-data-types) for more details.
+-->
+カスタムフィールド型は、`__ modify_schema__` クラスメソッドを使用して生成されたスキーマをカスタマイズできます。
+詳細は、[カスタムデータ型](types.md#custom-data-types)を参照してください。
 
+<!--
 ## JSON Schema Types
+-->
+## JSON スキーマ型
 
+<!--
 Types, custom field types, and constraints (like `max_length`) are mapped to the corresponding spec formats in the
 following priority order (when there is an equivalent available):
+-->
+型、カスタムフィールド型、`max_length` のような制約は、以下の優先順位で対応するフォーマットにマッピングされます。
 
 1. [JSON Schema Core](http://json-schema.org/latest/json-schema-core.html#rfc.section.4.3.1)
 2. [JSON Schema Validation](http://json-schema.org/latest/json-schema-validation.html)
 3. [OpenAPI Data Types](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types)
+<!--
 4. The standard `format` JSON field is used to define *pydantic* extensions for more complex `string` sub-types.
+-->
+4. 標準形式の `format` JSON フィールドは、より複雑な文字列サブタイプのための *pydantic* 拡張を定義するために使用されます。
 
+<!--
 The field schema mapping from Python / *pydantic* to JSON Schema is done as follows:
+-->
+Python / *pydantic* から JSON スキーマへのフィールドスキーママッピングは以下の通りです:
 
 {!.tmp_schema_mappings.html!}
 
+<!--
 ## Top-level schema generation
+-->
+## トップレベルスキーマの生成
 
+<!--
 You can also generate a top-level JSON Schema that only includes a list of models and related
 sub-models in its `definitions`:
+-->
+モデルと関連するサブモデルのリストのみを `definitions` に含むトップレベルの JSON スキーマを生成することもできます:
 
 ```py
 {!.tmp_examples/schema_top_level.py!}
 ```
-_(This script is complete, it should run "as is")_
 
+<!--
+_(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
+
+<!--
 Outputs:
+-->
+出力:
 
 ```json
 {!.tmp_examples/schema_top_level.json!}
 ```
 
+<!--
 ## Schema customization
+-->
+## スキーマのカスタマイズ
 
+<!--
 You can customize the generated `$ref` JSON location: the definitions are always stored under the key
 `definitions`, but a specified prefix can be used for the references.
+-->
+生成された `$ref` JSON の場所をカスタマイズできます。
+`definitions` は常にキー定義の下に保存されますが、指定されたプレフィックスを参照に使用できます。
 
+<!--
 This is useful if you need to extend or modify the JSON Schema default definitions location. E.g. with OpenAPI:
+-->
+これは JSON スキーマのデフォルト定義の場所を拡張または変更する必要がある場合に便利です。
+例えば Open API の場合:
 
 ```py
 {!.tmp_examples/schema_custom.py!}
 ```
-_(This script is complete, it should run "as is")_
 
+<!--
+_(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
+
+<!--
 Outputs:
+-->
+出力:
 
 ```json
 {!.tmp_examples/schema_custom.json!}
 ```
 
+<!--
 It's also possible to extend/override the generated JSON schema in a model.
+-->
+モデルで生成された JSON スキーマを拡張/オーバーライドすることもできます。
 
+<!--
 To do it, use the `Config` sub-class attribute `schema_extra`.
+-->
+それを行うには、`Config` のサブクラス属性 `schema_extra` を使用します。
 
+<!--
 For example, you could add `examples` to the JSON Schema:
+-->
+例えば JSON スキーマに `examples` をついかできます:
 
 ```py
 {!.tmp_examples/schema_with_example.py!}
 ```
-_(This script is complete, it should run "as is")_
 
+<!--
+_(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
+
+<!--
 Outputs:
+-->
+出力:
 
 ```json
 {!.tmp_examples/schema_with_example.json!}
 ```
 
+<!--
 For more fine-grained control, you can alternatively set `schema_extra` to a callable and post-process the generated schema.
-The callable can have one or two positional arguments.
-The first will be the schema dictionary.
-The second, if accepted, will be the model class.
-The callable is expected to mutate the schema dictionary *in-place*; the return value is not used.
+-->
+よりきめ細かい制御のために、代わりに `schema_extra` を呼び出し可能に設定し、
+生成されたスキーマを後処理することができます。
 
+<!--
+The callable can have one or two positional arguments.
+-->
+呼び出し可能オブジェクトには、1 つまたは 2 つの位置引数を指定できます。
+
+<!--
+The first will be the schema dictionary.
+-->
+最初はスキーマ辞書を指定します。
+
+<!--
+The second, if accepted, will be the model class.
+-->
+2 番目は、受け入れられた場合、モデルクラスを指定します。
+
+<!--
+The callable is expected to mutate the schema dictionary *in-place*; the return value is not used.
+-->
+呼び出し可能オブジェクトは、スキーマディクショナリを *in-place* で変更することが期待され、戻り値は使用されません。
+
+<!--
 For example, the `title` key can be removed from the model's `properties`:
+-->
+たとえば、`title` キーはモデルの `properties` から削除できます。
 
 ```py
 {!.tmp_examples/schema_extra_callable.py!}
 ```
 
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
+<!--
 Outputs:
+-->
+出力:
 
 ```json
 {!.tmp_examples/schema_extra_callable.json!}
