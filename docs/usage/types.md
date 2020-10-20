@@ -1,155 +1,360 @@
+<!--
 Where possible *pydantic* uses [standard library types](#standard-library-types) to define fields, thus smoothing
 the learning curve. For many useful applications, however, no standard library type exists,
 so *pydantic* implements [many commonly used types](#pydantic-types).
+-->
+可能な場合、*pydantic* は[標準ライブラリ](#standard-library-types)の型を使用してフィールドを定義するので、スムーズに学習できます。
+しかし、多くの便利なアプリケーションでは標準ライブラリの型が存在しないため、
+*pydantic* は一般的に使用される[多くの型](#pydantic-types)を実装しています。
 
+<!--
 If no existing type suits your purpose you can also implement your [own pydantic-compatible types](#custom-data-types)
 with custom properties and validation.
+-->
+目的に合った既存の型がない場合は、
+カスタムプロパティやバリデーションを使って独自の [pydantic 互換の型](#custom-data-types)を実装することもできます。
 
+<!--
 ## Standard Library Types
+-->
+## 標準ライブラリの型
 
+<!--
 *pydantic* supports many common types from the python standard library. If you need stricter processing see
 [Strict Types](#strict-types); if you need to constrain the values allowed (e.g. to require a positive int) see
 [Constrained Types](#constrained-types).
+-->
+*pydantic* は、Python 標準ライブラリの多くの一般的なタイプをサポートしています。
+より厳密な処理が必要な場合は、[厳密な型](#strict-types)を参照してください。
+許可される値を制約する必要がある場合(例: 正の整数であることが必須)は、
+[制約された型](#constrained-types)を参照してください。
 
+<!--
 `bool`
 : see [Booleans](#booleans) below for details on how bools are validated and what values are permitted
+-->
+`bool`
+: bool のバリデーションと許可される値の詳細は、[Boolean](#booleans) を参照してください。
 
+<!--
 `int`
 : *pydantic* uses `int(v)` to coerce types to an `int`;
   see [this](models.md#data-conversion) warning on loss of information during data conversion
+-->
+`int`
+: *pydantic* は `int(v)` を使用して型を `int` に強制変換します。
+  データ変換時の情報の損失については[こちら](models.md#data-conversion)の警告を参照してください。
 
+<!--
 `float`
 : similarly, `float(v)` is used to coerce values to floats
+-->
+`float`
+: 同様に、`float(v)` は値を `float` に強制変換するために使用します。
 
+<!--
 `str`
 : strings are accepted as-is, `int` `float` and `Decimal` are coerced using `str(v)`, `bytes` and `bytearray` are
   converted using `v.decode()`, enums inheriting from `str` are converted using `v.value`,
   and all other types cause an error
+-->
+`str`
+: 文字列はそのまま受け入れられ、
+  `int`、`float`、`Decimal` は `str(v)` を使用して強制変換され、
+  `bytes` と `bytearray` は `v.decode()` を使用して変換され、
+  `str` から継承する列挙型は `v.value` を使用して変換され、
+  他のすべての型はエラーとなります。
 
+<!--
 `bytes`
 : `bytes` are accepted as-is, `bytearray` is converted using `bytes(v)`, `str` are converted using `v.encode()`,
   and `int`, `float`, and `Decimal` are coerced using `str(v).encode()`
+-->
+`bytes`
+: `bytes` はそのまま受け入れられ、
+  `bytearray` は `bytes(v)` を使用して変換され、
+  `str` は `v.encode()` を使用して変換され、
+  `int`、`float`、`Decimal` は `str(v).encode()` を使用して強制変換されます。
 
+<!--
 `list`
 : allows `list`, `tuple`, `set`, `frozenset`, or generators and casts to a list;
   see `typing.List` below for sub-type constraints
+-->
+`list`
+: `list`、`tuple`、`set`、`frozenset`、またはジェネレータをリストにキャストします。
+  サブタイプの制約については以下の`typing.List` を参照してください。
 
+<!--
 `tuple`
 : allows `list`, `tuple`, `set`, `frozenset`, or generators and casts to a tuple;
   see `typing.Tuple` below for sub-type constraints
+-->
+`tuple`
+: `list`、`tuple`、`set`、`frozenset`、またはジェネレータをタプルにキャストします。
+  サブタイプの制約については以下の `typing.Tuple` を参照してください。
 
+<!--
 `dict`
 : `dict(v)` is used to attempt to convert a dictionary;
   see `typing.Dict` below for sub-type constraints
+-->
+`dict`
+: `dict(v)` は、辞書の変換を試みるために使用されます。
+  サブライプの制約については以下の `typing.Dict` を参照してください。
 
+<!--
 `set`
 : allows `list`, `tuple`, `set`, `frozenset`, or generators and casts to a set;
   see `typing.Set` below for sub-type constraints
+-->
+`set`
+: `list`、`tuple`、`set`、`frozenset`、またはジェネレータをセットにキャストします。
+  サブタイプの制約については以下の `typing.Set` を参照してください。
 
+<!--
 `frozenset`
 : allows `list`, `tuple`, `set`, `frozenset`, or generators and casts to a frozen set;
   see `typing.FrozenSet` below for sub-type constraints
+-->
+`frozenset`
+: `list`、`tuple`、`set`、`frozenset`、またはジェネレータをフローズンセットにキャストします。
+  サブタイプの制約については以下の `typing.FrozenSet` を参照してください。
 
+<!--
 `datetime.date`
 : see [Datetime Types](#datetime-types) below for more detail on parsing and validation
+-->
+`datetime.date`
+: パースとバリデーションの詳細は、[Datetime 型](#datetime-types)を参照してください。
 
+<!--
 `datetime.time`
 : see [Datetime Types](#datetime-types) below for more detail on parsing and validation
+-->
+`datetime.time`
+: パースとバリデーションの詳細は、[Datetime 型](#datetime-types)を参照してください。
 
+<!--
 `datetime.datetime`
 : see [Datetime Types](#datetime-types) below for more detail on parsing and validation
+-->
+`datetime.datetime`
+: パースとバリデーションの詳細は、[Datetime 型](#datetime-types)を参照してください。
 
+<!--
 `datetime.timedelta`
 : see [Datetime Types](#datetime-types) below for more detail on parsing and validation
+-->
+`datetime.timedelta`
+: パースとバリデーションの詳細は、[Datetime 型](#datetime-types)を参照してください。
 
+<!--
 `typing.Any`
 : allows any value include `None`, thus an `Any` field is optional
+-->
+`typing.Any`
+: `None` を含む任意の値を許可するので、`Any` フィールドはオプションです。
 
+<!--
 `typing.TypeVar`
 : constrains the values allowed based on `constraints` or `bound`, see [TypeVar](#typevar)
+-->
+`typing.TypeVar`
+: `constraints` または `bound` に基づいて、許可される値を成約します。[TypeVar](#typevar) を参照してください。
 
+<!--
 `typing.Union`
 : see [Unions](#unions) below for more detail on parsing and validation
+-->
+`typing.Union`
+: パースとバリデーションの詳細は、[Unions](#unions) を参照してください。
 
+<!--
 `typing.Optional`
 : `Optional[x]` is simply short hand for `Union[x, None]`;
   see [Unions](#unions) below for more detail on parsing and validation and [Required Fields](models.md#required-fields) for details about required fields that can receive `None` as a value.
+-->
+`typing.Optional`
+: `Optional[x]` は `Union[x, None]` の省略形です。
+  パースとバリデーションの詳細は、[Unions](#unions) を参照してください。
+  `None` を値として受け取れる必須フィールドの詳細については、
+  [必須フィールド](models.md#required-fields)を参照してください。
 
+<!--
 `typing.List`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.List`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.Tuple`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.Tuple`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.Dict`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.Dict`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.Set`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.Set`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.FrozenSet`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.FrozenSet`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.Sequence`
 : see [Typing Iterables](#typing-iterables) below for more detail on parsing and validation
+-->
+`typing.Sequence`
+: パースとバリデーションの詳細は、[イテラブル型](#typing-iterables)を参照してください。
 
+<!--
 `typing.Iterable`
 : this is reserved for iterables that shouldn't be consumed. See [Infinite Generators](#infinite-generators) below for more detail on parsing and validation
+-->
+`typing.Iterable`
+: これは消費されるべきでないイテラブルのために予約されています。
+  パースとバリデーションの詳細は、[イテラブルジェネレータ](#infinite-generators)を参照してください。
 
+<!--
 `typing.Type`
 : see [Type](#type) below for more detail on parsing and validation
+-->
+`typing.Type`
+: パースとバリデーションの詳細は、[Type](#type)を参照してください。
 
+<!--
 `typing.Callable`
 : see [Callable](#callable) below for more detail on parsing and validation
+-->
+`typing.Callable`
+: パースとバリデーションの詳細は、[Callable](#callable)を参照してください。
 
+<!--
 `typing.Pattern`
 : will cause the input value to be passed to `re.compile(v)` to create a regex pattern
+-->
+`typing.Pattern`
+: 値を `re.compile(v)` に渡して正規表現パターンを作成します。
 
+<!--
 `ipaddress.IPv4Address`
 : simply uses the type itself for validation by passing the value to `IPv4Address(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+`ipaddress.IPv4Address`
+: 値を `IPv4Address(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `ipaddress.IPv4Interface`
 : simply uses the type itself for validation by passing the value to `IPv4Address(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+`ipaddress.IPv4Interface`
+: 値を `IPv4Address(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `ipaddress.IPv4Network`
 : simply uses the type itself for validation by passing the value to `IPv4Network(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+`ipaddress.IPv4Network`
+: 値を `IPv4Network(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `ipaddress.IPv6Address`
 : simply uses the type itself for validation by passing the value to `IPv6Address(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+`ipaddress.IPv6Address`
+: 値を `IPv4Address(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `ipaddress.IPv6Interface`
 : simply uses the type itself for validation by passing the value to `IPv6Interface(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+`ipaddress.IPv6Interface`
+: 値を `IPv4Interface(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `ipaddress.IPv6Network`
 : simply uses the type itself for validation by passing the value to `IPv6Network(v)`;
   see [Pydantic Types](#pydantic-types) for other custom IP address types
+-->
+: 値を `IPv6Network(v)` に渡すことで、バリデーションのために単に型自体を使用します。
+  他の IP アドレス型については、[Pydantic Types](#pydantic-types) を参照してください。
 
+<!--
 `enum.Enum`
 : checks that the value is a valid member of the enum;
   see [Enums and Choices](#enums-and-choices) for more details
+-->
+`enum.Enum`
+: 値が列挙型の有効なメンバーであることを確認します。
+  詳細については[列挙型と Choices](#enums-and-choices) を参照してください。
 
+<!--
 `enum.IntEnum`
 : checks that the value is a valid member of the integer enum;
   see [Enums and Choices](#enums-and-choices) for more details
+-->
+`enum.IntEnum`
+: 値が列挙数値型の有効なメンバーであることを確認します。
+  詳細については[列挙型と Choices](#enums-and-choices) を参照してください。
 
+<!--
 `decimal.Decimal`
 : *pydantic* attempts to convert the value to a string, then passes the string to `Decimal(v)`
+-->
+`decimal.Decimal`
+: *pydantic* は値を文字列に変換しようとし、その文字列を `Decimal(v)` に渡します。
 
+<!--
 `pathlib.Path`
 : simply uses the type itself for validation by passing the value to `Path(v)`;
   see [Pydantic Types](#pydantic-types) for other more strict path types
+-->
+`pathlib.Path`
+: 値を `Path(v)` に渡すことで、単にバリデーションのために型自体を使用します。
+  他のより厳密なパス型については、[Pydantic 型](#pydantic-types)を参照してください。
 
+<!--
 `uuid.UUID`
 : strings and bytes (converted to strings) are passed to `UUID(v)`, with a fallback to `UUID(bytes=v)` for `bytes` and `bytearray`;
   see [Pydantic Types](#pydantic-types) for other stricter UUID types
+-->
+`uuid.UUID`
+: 文字列とバイト(文字列に変換)は `UUID(v)` に渡され、
+  `bytes` と `bytearray` は `UUID(bytes=v)` にフォールバックされます。
+  他のより厳密な UUID 型については、[Pydantic 型](#pydantic-types)を参照してください。
 
+<!--
 `ByteSize`
 : converts a bytes string with units to bytes
+-->
+`ByteSize`
+: 単位を含むバイト文字列をバイトに変換します。
 
 ### Typing Iterables
 
