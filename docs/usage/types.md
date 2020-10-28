@@ -402,7 +402,6 @@ generator or a remote data loader, you can define its type with `Iterable`:
 しかし、無限ジェネレータやリモートデータローダなど、消費されたくないジェネレータがある場合は、
 `Iterable` でそのタイプを定義することができます:
 
-
 ```py
 {!.tmp_examples/types_infinite_generator.py!}
 ```
