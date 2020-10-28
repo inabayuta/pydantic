@@ -362,36 +362,69 @@ with custom properties and validation.
 `ByteSize`
 : 単位を含むバイト文字列をバイトに変換します。
 
+<!--
 ### Typing Iterables
+-->
+### 反復可能な型
 
+<!--
 *pydantic* uses standard library `typing` types as defined in PEP 484 to define complex objects.
+-->
+*pydantic* は PEP 484 で定義されている標準ライブラリ `typing` の型を使用して、複雑なオブジェクトを定義します。
 
 ```py
 {!.tmp_examples/types_iterables.py!}
 ```
+
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
+<!--
 ### Infinite Generators
+-->
+### 無限ジェネレータ
 
+<!--
 If you have a generator you can use `Sequence` as described above. In that case, the
 generator will be consumed and stored on the model as a list and its values will be
 validated with the sub-type of `Sequence` (e.g. `int` in `Sequence[int]`).
+-->
+ジェネレータを持っている場合は、上記のように `Sequence` を使用することができます。
+その場合、ジェネレータは消費されてリストとしてモデルに格納され、
+その値は `Sequence` のサブタイプ(例: `Sequence[int]` の `int`)でバリデーションされます。
 
+<!--
 But if you have a generator that you don't want to be consumed, e.g. an infinite
 generator or a remote data loader, you can define its type with `Iterable`:
+-->
+しかし、無限ジェネレータやリモートデータローダなど、消費されたくないジェネレータがある場合は、
+`Iterable` でそのタイプを定義することができます:
+
 
 ```py
 {!.tmp_examples/types_infinite_generator.py!}
 ```
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
+<!--
 !!! warning
     `Iterable` fields only perform a simple check that the argument is iterable and
     won't be consumed.
 
     No validation of their values is performed as it cannot be done without consuming
     the iterable.
+-->
+!!! warning
+    イテレート可能なフィールドは、引数がイテレート可能であり消費されないという単純なチェックを行うだけです。
+    
+    イテレートを消費しないとバリデーションできないので、値の検証は行われません。
 
+<!--
 !!! tip
     If you want to validate the values of an infinite generator you can create a
     separate model and use it while consuming the generator, reporting the validation
@@ -399,47 +432,97 @@ _(This script is complete, it should run "as is")_
 
     pydantic can't validate the values automatically for you because it would require
     consuming the infinite generator.
+-->
+!!! tip
+    無限ジェネレーターの値をバリデーションする場合は、別のモデルを作成し、
+    ジェネレーターを使用しながらそれを使用して、必要に応じてバリデーションエラーを報告できます。
 
+    pydantic は、無限ジェネレーターを使用する必要があるため、値を自動でバリデーションできません。
+
+<!--
 ## Validating the first value
+-->
+## 最初の値の検証
 
+<!--
 You can create a [validator](validators.md) to validate the first value in an infinite generator and still not consume it entirely.
+-->
+[バリデーター](validators.md)を作成して、無限ジェネレーターの最初の値をバリデーションし、
+それを完全に消費しないようにすることができます。
 
 ```py
 {!.tmp_examples/types_infinite_generator_validate_first.py!}
 ```
+
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
+<!--
 ### Unions
+-->
+### ユニオン
 
+<!--
 The `Union` type allows a model attribute to accept different types, e.g.:
+-->
+`Union` タイプを使用すると、モデル属性が異なる型を受け入れることができます。例:
 
+<!--
 !!! warning
     This script is complete, it should run "as is". However, it may not reflect the desired behavior; see below.
+-->
+!!! warning
+    このスクリプトは完了しています。「そのまま」実行する必要があります。
+    ただし、目的の動作を反映していない場合があります。 下記参照。
 
 ```py
 {!.tmp_examples/types_union_incorrect.py!}
 ```
 
+<!--
 However, as can be seen above, *pydantic* will attempt to 'match' any of the types defined under `Union` and will use
 the first one that matches. In the above example the `id` of `user_03` was defined as a `uuid.UUID` class (which
 is defined under the attribute's `Union` annotation) but as the `uuid.UUID` can be marshalled into an `int` it
 chose to match against the `int` type and disregarded the other types.
+-->
+ただし、上記のように、*pydantic* は、`Union` で定義されているタイプのいずれかに「一致」しようとし、
+一致する最初のタイプを使用します。 上記の例では、`user_03` の `id` は `uuid.UUID` クラス
+(属性の `Union` アノテーションで定義されています)として定義されていますが、
+`uuid.UUID` は `int` タイプと一致することを選択し、他の型を無視します。
 
+<!--
 As such, it is recommended that, when defining `Union` annotations, the most specific type is included first and
 followed by less specific types. In the above example, the `UUID` class should precede the `int` and `str`
 classes to preclude the unexpected representation as such:
+-->
+そのため、`Union` アノテーションを定義する際には最も具体的なタイプを最初に含め、
+次にあまり具体的でないタイプを含めることをお勧めします。上記の例では、
+`UUID` クラスを `int` クラスと `str` クラスの前に置いて、予期しない表現を排除する必要があります。
 
 ```py
 {!.tmp_examples/types_union_correct.py!}
 ```
-_(This script is complete, it should run "as is")_
 
+<!--
+_(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
+
+<!--
 !!! tip
     The type `Optional[x]` is a shorthand for `Union[x, None]`.
 
     `Optional[x]` can also be used to specify a required field that can take `None` as a value.
 
     See more details in [Required Fields](models.md#required-fields).
+-->
+!!! tip
+    `Optional[x]` は `Union[x, None]` のショートハンドです。
+    また、`Optional [x]` を使用して `None` を値とする必須フィールドを指定することもできます。
+    
+    詳細については、[必須フィールド](models.md＃required-fields)を参照してください。
 
 ### Enums and Choices
 
