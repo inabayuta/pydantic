@@ -523,21 +523,37 @@ _(このスクリプトは完成しています。「そのまま」実行する
     
     詳細については、[必須フィールド](models.md＃required-fields)を参照してください。
 
+<!--
 ### Enums and Choices
+-->
+### Enum と Choices
 
+<!--
 *pydantic* uses python's standard `enum` classes to define choices.
+-->
+*pydantic* は Python 標準の `enum` クラスを使用して choices を定義します。
 
 ```py
 {!.tmp_examples/types_choices.py!}
 ```
+
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
-
+<!--
 ### Datetime Types
+-->
+### Datetime 型
 
+<!--
 *Pydantic* supports the following [datetime](https://docs.python.org/library/datetime.html#available-types)
 types:
+-->
+*Pydantic* は以下の [datetime](https://docs.python.org/library/datetime.html#available-types) 型をサポートします:
 
+<!--
 * `datetime` fields can be:
 
     * `datetime`, existing `datetime` object
@@ -546,7 +562,17 @@ types:
 
         * `YYYY-MM-DD[T]HH:MM[:SS[.ffffff]][Z[±]HH[:]MM]]]`
         * `int` or `float` as a string (assumed as Unix time)
+-->
+* `datetime` フィールドは次のものがあります:
 
+    * `datetime`: 既存の `datetime` オブジェクト
+    * `int` または `float`: Unix 時間とみなされます。つまり1970年1月1日からの秒(if >= `-2e10` or <= `2e10`)またはミリ秒(if < `-2e10`or > `2e10`)
+    * `str` は以下のフォーマットで動作します:
+
+        * `YYYY-MM-DD[T]HH:MM[:SS[.ffffff]][Z[±]HH[:]MM]]]`
+        * 文字列としての `int` または `float` (Unix時間と想定)
+
+<!--
 * `date` fields can be:
 
     * `date`, existing `date` object
@@ -555,14 +581,32 @@ types:
 
         * `YYYY-MM-DD`
         * `int` or `float`, see `datetime`
+-->
+* `date` フィールドは次のものがあります:
 
+    * `date`: 既存の `date` オブジェクト
+    * `int` または `float`: `datetime` を参照
+    * `str` は以下のフォーマットで動作します:
+
+        * `YYYY-MM-DD`
+        * `int` または `float`: `datetime` を参照
+
+<!--
 * `time` fields can be:
 
     * `time`, existing `time` object
     * `str`, following formats work:
 
         * `HH:MM[:SS[.ffffff]]`
+-->
+* `time` フィールドは次のものがあります:
 
+    * `time`: 既存の `time` オブジェクト
+    * `str` は以下のフォーマットで動作します:
+
+        * `HH:MM[:SS[.ffffff]]`
+
+<!--
 * `timedelta` fields can be:
 
     * `timedelta`, existing `timedelta` object
@@ -571,6 +615,15 @@ types:
 
         * `[-][DD ][HH:MM]SS[.ffffff]`
         * `[±]P[DD]DT[HH]H[MM]M[SS]S` (ISO 8601 format for timedelta)
+-->
+* `timedelta` フィールドは次のものがあります:
+
+    * `timedelta`: 既存の `timedelta` オブジェクト
+    * `int` または `float`: 秒とみなされます
+    * `str` は以下のフォーマットで動作します:
+
+        * `[-][DD ][HH:MM]SS[.ffffff]`
+        * `[±]P[DD]DT[HH]H[MM]M[SS]S` (timedelta の ISO 8601 フォーマット)
 
 ```py
 {!.tmp_examples/types_dt.py!}
@@ -578,30 +631,57 @@ types:
 
 ### Booleans
 
+<!--
 !!! warning
     The logic for parsing `bool` fields has changed as of version **v1.0**.
 
     Prior to **v1.0**, `bool` parsing never failed, leading to some unexpected results.
     The new logic is described below.
+-->
+!!! warning
+    **v1.0** 以前は `bool` のパースが失敗せず、予期しない結果が発生していました。
+    以下で新しいロジックについて説明します。
 
+<!--
 A standard `bool` field will raise a `ValidationError` if the value is not one of the following:
+-->
+標準の `bool` フィールドは、値が以下のいずれかでない場合、`ValidationError` を発生させます。
 
+<!--
 * A valid boolean (i.e. `True` or `False`),
 * The integers `0` or `1`,
 * a `str` which when converted to lower case is one of
   `'0', 'off', 'f', 'false', 'n', 'no', '1', 'on', 't', 'true', 'y', 'yes'`
 * a `bytes` which is valid (per the previous rule) when decoded to `str`
+-->
+* 有効な boolean (例: `True` または `False`)
+* 数値 `0` または `1`
+* 小文字に変換された際に `'0', 'off', 'f', 'false', 'n', 'no', '1', 'on', 't', 'true', 'y', 'yes'` のいずれかである
+* `str` にデコードされたときに(前のルールに従って)有効な `bytes`。
 
+<!--
 !!! note
     If you want stricter boolean logic (e.g. a field which only permits `True` and `False`) you can
     use [`StrictBool`](#strict-types).
+-->
+!!! note
+    より厳密な boolean ロジック(例えば `True`と `False` のみを許可するフィールド)が必要な場合は、
+    [`StrictBool`](#strict-types) を使用できます。
 
+<!--
 Here is a script demonstrating some of these behaviors:
+-->
+以下に、これらの動作のいくつかを示すスクリプトを示します:
+
 
 ```py
 {!.tmp_examples/types_boolean.py!}
 ```
+
+<!--
 _(This script is complete, it should run "as is")_
+-->
+_(このスクリプトは完成しています。「そのまま」実行する必要があります)_
 
 ### Callable
 
